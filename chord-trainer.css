@@ -1,0 +1,47 @@
+
+.clock {
+    color: black;
+}
+
+.clock.tick {
+    color: orange;
+}
+
+.keyboard, .keyboard > g {
+    border: 1px solid black;
+}
+
+.keyboard .white.key {
+    stroke: black;
+    fill: white;
+}
+
+.keyboard .black.key {
+    stroke: darkgray;
+    fill: black;
+}
+
+.keyboard .white.key.pressed {
+    fill: lightgray;
+}
+
+.keyboard .black.key.pressed {
+    fill: darkgray;
+}
+
+.keyboard text {
+    font-family: sans-serif;
+    font-size: 8px;
+    fill: black;
+}
+
+.keyboard .key.in-chord {
+    fill: darkorange;
+}
+
+.chord-prompt {
+    display: inline-block;
+    width: 500px;
+    text-align: center;
+    font-size: 40px;
+}
