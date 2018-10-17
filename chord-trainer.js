@@ -1,14 +1,4 @@
 
-const MidiMessage = {
-    NoteOn: 144,
-    NoteOff: 128,
-    Clock: 248
-}
-
-const MIDI_C0_OFFSET = 24;
-const OCTAVE_SEMITONES = 12;
-const NOTE_NAMES = [ 'C','C#','D','D#','E','F','F#','G','G#','A','A#','B' ];
-const ORDINALS = [ 'First','Second','Third','Fourth','Fifth','Sixth','Seventh' ];
 
                           
 class KeyboardKey {
@@ -42,8 +32,6 @@ class MidiUtil  {
         this.inputs = null;
         this.inputSelector = null;
         this.port = null;
-        this.clockElement = document.querySelector('.clock');
-        this.clockTick = false;
 
         this.onNoteStateChange = onNoteStateChange;
 
@@ -94,7 +82,6 @@ class MidiUtil  {
 
         switch (command) {
             case MidiMessage.Clock:
-                //this.tickClock();
                 break;
             case MidiMessage.NoteOn:
                 this.onNoteStateChange(note, true);
@@ -105,43 +92,28 @@ class MidiUtil  {
         }
     }
 
-    tickClock() { 
-        if (this.clockTick) {
-            this.clockElement.classList.add('tick');
-        } else {
-            this.clockElement.classList.remove('tick');
-        }
-        this.clockTick = !this.clockTick;
-    }
 };
 
-const SCALE_FACTOR = 3
-const KEY_WIDTH_WHITE = 15 * SCALE_FACTOR;
-const KEY_WIDTH_BLACK = 10 * SCALE_FACTOR;
-const KEYBOARD_HEIGHT = 70 * SCALE_FACTOR;
-const KEY_HEIGHT_WHITE = KEYBOARD_HEIGHT;
-const KEY_HEIGHT_BLACK = Math.round((2/3) * KEY_HEIGHT_WHITE);
-const OCTAVE_WIDTH = 7 * KEY_WIDTH_WHITE; // 7 white keys
-const OCTAVE_TOTAL = 5;
 
 class Keyboard {
     
     constructor() {
-        this.svg = d3.select('svg.keyboard');
-
-        console.log(this.svg);
 
         var octaveOffset = 2;
 
         this.width = (OCTAVE_TOTAL - octaveOffset) * OCTAVE_WIDTH;
         this.height = KEYBOARD_HEIGHT;
 
-        this.svg.attr('width', this.width);
-        this.svg.attr('height', this.height);
+        this.svg = d3.select('svg.keyboard')
+            .attr('width', this.width)
+            .attr('height', this.height)
+            .style('width', this.width + 'px')
+            .style('height', this.height + 'px');
 
-        this.g = this.svg
-            .append('g')
-                .attr('transform', 'translate(' + (-2 * OCTAVE_WIDTH) + ',0)')
+        console.log(this.svg);
+
+        this.g = this.svg .append('g')
+                .attr('transform', 'translate(' + (-2 * OCTAVE_WIDTH) + ',0)');
 
         this.state = [];
         for (var i=0; i < OCTAVE_TOTAL * OCTAVE_SEMITONES; i++) {
@@ -223,20 +195,6 @@ class ScaleDegree {
     }
 }
 
-const ONE_OCTAVE = [];
-for (var i=0; i < OCTAVE_SEMITONES; i++) {
-    ONE_OCTAVE[i] = new KeyboardKey(i);
-}
-
-const MINOR_THIRD = 3;
-const MAJOR_THIRD = 4;
-const PERFECT_FOURTH = 5;
-const MAJOR_CHORD_INTERVALS = [MAJOR_THIRD, MINOR_THIRD];
-const MINOR_CHORD_INTERVALS = [MINOR_THIRD, MAJOR_THIRD];
-const DIMINISHED_CHORD_INTERVALS = [MINOR_THIRD, MINOR_THIRD];
-
-const MAJOR_SCALE_PATTERN = [2,2,1,2,2,2,1]
-const MAJOR_CHORD_DEGREES = [1,3,5]
 const MAJOR_CHORD_DEGREES_EX = [
     new ScaleDegree(1),
     new ScaleDegree(3),
@@ -270,7 +228,7 @@ class Chord {
         }
         */
 
-        for (i = 0; i < this.degrees.length; i++) {
+        for (var i = 0; i < this.degrees.length; i++) {
             var degree = this.degrees[i];
             var scalePosition = degree.degree - 1 + chordRootDegree;
             console.log(degree.degree, scalePosition);
@@ -371,28 +329,10 @@ class ChordTrainer {
             chordQuality = 'dim';
         }
 
+
+
         document.querySelector('.chord-prompt').innerText = new KeyboardKey(chordNotes[0]).name + ' ' + chordQuality;
     }
-
-    chordNotes(rootNote, scalePattern, chordDegrees, degreeOffset) {
-        if (typeof degreeOffset === 'undefined') {
-            degreeOffset = 0;
-        }
-        var chordNotes = [];
-
-        var cumulativeOffset = 0;
-        var cumulativeScalePattern = [];
-        for (var i=0; i < scalePattern.length; i++) {
-            cumulativeScalePattern.push(cumulativeOffset);
-            cumulativeOffset += scalePattern[i];
-        }
-
-        for (i = 0; i < chordDegrees.length; i++) {
-            chordNotes.push(rootNote + cumulativeScalePattern[chordDegrees[i] - 1 + degreeOffset]);
-        }
-
-        return chordNotes;
-    }             
 }
 
 function init() {

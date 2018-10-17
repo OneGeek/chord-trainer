@@ -1,12 +1,13 @@
+<!DOCTYPE html>
 <html>
 <head>
     <link href="chord-trainer.css" rel="stylesheet">
+    <script src="constants.js"></script>
     <script src="chord-trainer.js"></script>
     <script src="d3.js"></script>
 </head>
 <body onload="init()">
-    <div>
-        <h1>Chord Trainer</h1>
+    <div class="controls">
         <button onclick="promptForChord()">Random Chord</button>
         <button onclick="promptForChord(1)">I</button>
         <button onclick="promptForChord(2)">II</button>
@@ -15,10 +16,19 @@
         <button onclick="promptForChord(5)">V</button>
         <button onclick="promptForChord(6)">VI</button>
         <button onclick="promptForChord(7)">VII</button>
-        <span class="chord-prompt"></span>
     </div>
-    <span style="display:none;" class="clock">•</span>
-    <svg class="keyboard"></svg>
+    <div class="task">
+        <div class="prompt">
+            <div class="feedback">
+                <div class="correct">&#x2714;</div>
+                <div class="incorrect">&#x2718;</div>
+            </div>
+            <div class="chord-prompt"></div>
+        </div>
+    </div>
+    <div class="keyboard-wrap">
+        <svg class="keyboard"></svg>
+    </div>
 
 </body>
 </html>
